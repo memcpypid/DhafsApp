@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "819189167986",
+    "project_id": "dhafs-app",
+    "storage_bucket": "dhafs-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:819189167986:android:0809b89c23284c18380feb",
+        "android_client_info": {
+          "package_name": "umm.dhafs_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDbUpQuo3KC52hgJZl3FV59YBzRQqkFHqI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
