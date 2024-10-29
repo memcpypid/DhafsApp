@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
@@ -11,10 +10,10 @@ class FirebaseMessagingHandler {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   // Inisialisasi kanal notifikasi untuk Android
   final _androidChannel = const AndroidNotificationChannel(
-    'channel_notification',
-    'High Importance Notification',
+    'channel_notification', 'High Importance Notification',
     description: 'Used For Notification',
-    importance: Importance.defaultImportance,
+    enableVibration: true,
+    importance: Importance.high, //Importance.defaultImportance,
   );
   final _localNotification = FlutterLocalNotificationsPlugin();
   Future<void> initPushNotification() async {
@@ -55,6 +54,10 @@ class FirebaseMessagingHandler {
             android: AndroidNotificationDetails(
                 _androidChannel.id, _androidChannel.name,
                 channelDescription: _androidChannel.description,
+                importance: Importance.high,
+                priority: Priority.high,
+                enableVibration: true,
+                fullScreenIntent: true,
                 icon: '@drawable/ic_launcher')),
         payload: jsonEncode(message.toMap()),
       );
@@ -69,7 +72,6 @@ class FirebaseMessagingHandler {
   Future initLocalNotification() async {
     const ios = DarwinInitializationSettings();
     const android = AndroidInitializationSettings('@mipmap/ic_launcher');
-
     const settings = InitializationSettings(android: android, iOS: ios);
     await _localNotification.initialize(settings);
   }
