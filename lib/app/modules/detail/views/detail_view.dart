@@ -1,11 +1,17 @@
+import 'package:dhafs_app/app/data/models/models_cake.dart';
+import 'package:dhafs_app/app/data/services/service_cake.dart';
+import 'package:dhafs_app/app/modules/home/views/home_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/detail_controller.dart';
 
 class DetailView extends GetView<DetailController> {
-  const DetailView({Key? key}) : super(key: key);
+  DetailView({super.key});
+
   @override
   Widget build(BuildContext context) {
+    final Result result = Get.arguments as Result;
+    final DbController dbController = DbController();
     return Scaffold(
       appBar: AppBar(
         leading: Padding(
@@ -15,13 +21,18 @@ class DetailView extends GetView<DetailController> {
               color: Colors.grey[300],
               borderRadius: BorderRadius.circular(8.0),
             ),
-            child: const Center(
-              child: Text(
-                "LOGO",
-                style: TextStyle(
+            child: Center(
+              child: IconButton(
+                icon: const Icon(
+                  Icons.arrow_back,
                   color: Colors.black,
-                  fontWeight: FontWeight.bold,
+                  size: 24.0,
                 ),
+                onPressed: () async {
+                  await dbController
+                      .getCakes(); // Call getCakes to refresh the data
+                  Get.off(HomeView());
+                },
               ),
             ),
           ),
@@ -33,78 +44,71 @@ class DetailView extends GetView<DetailController> {
           ),
         ],
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(50.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            GestureDetector(
-              onTap: () => controller.pickImageFromGallery(),
-              child: Obx(
-                () => Container(
-                  height: 300,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[300],
-                    borderRadius: BorderRadius.circular(25.0),
-                    image: controller.pickedImage != null
-                        ? DecorationImage(
-                            image: FileImage(controller.pickedImage!),
-                            fit: BoxFit.cover,
-                          )
-                        : null,
+            Obx(
+              () => Container(
+                height: 250,
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(25.0),
+                  image: DecorationImage(
+                    image: NetworkImage(result.image),
+                    fit: BoxFit.cover,
                   ),
-                  child: controller.pickedImage == null
-                      ? const Icon(
-                          Icons.add_a_photo,
-                          size: 48,
-                        )
-                      : null,
                 ),
+                child: controller.pickedImage != null
+                    ? const Icon(
+                        Icons.add_a_photo,
+                        size: 48,
+                      )
+                    : null,
               ),
             ),
-            const SizedBox(height: 16.0),
-            ElevatedButton(
-              onPressed: () {
-                print('Nama Product');
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFF383838),
-                padding: const EdgeInsets.symmetric(vertical: 16.0),
-                textStyle: const TextStyle(
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.bold,
-                ),
+            const SizedBox(height: 25.0),
+            Container(
+              decoration: BoxDecoration(
+                color: const Color(0xFF383838),
+                borderRadius: BorderRadius.circular(16.0),
               ),
-              child: const Text(
-                "Nama Produk",
+              padding:
+                  const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+              margin: const EdgeInsets.symmetric(vertical: 8.0),
+              child: Text(
+                result.title,
+                textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.white,
+                  fontSize: 20.0,
                 ),
               ),
             ),
             const SizedBox(height: 20.0),
-            // const Divider(),
-            const Text(
-              "Deskripsi Produk",
-              style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+            Text(
+              "Deskripsi Produk : " + result.deskripsiProduk,
+              style:
+                  const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20.0),
             const Divider(),
-            const Text(
-              "Harga Produk",
+            Text(
+              'Harga Produk : ' + result.hargaProduk,
               style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 15.0),
             const Divider(),
-            const Text(
-              "Keterangan Produk",
+            Text(
+              "Keterangan Produk : " + result.keteranganProduk,
               style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 15.0),
+            const SizedBox(height: 50.0),
             ElevatedButton(
               onPressed: () {},
               style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFF383838),
+                backgroundColor: const Color(0xFF383838),
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
                 textStyle: const TextStyle(
                   fontSize: 18.0,
@@ -131,6 +135,122 @@ class DetailView extends GetView<DetailController> {
                   ],
                 ),
               ),
+            ),
+            const SizedBox(height: 20.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    controller.title.value = result.title;
+                    controller.image.value = result.image;
+                    controller.deskripsiProduk.value = result.deskripsiProduk;
+                    controller.hargaProduk.value = result.hargaProduk;
+                    controller.keteranganProduk.value = result.keteranganProduk;
+
+                    Get.defaultDialog(
+                      title: "Edit Data",
+                      content: Column(
+                        children: [
+                          TextField(
+                            controller: TextEditingController(
+                                text: controller.image.value),
+                            decoration: InputDecoration(labelText: "URL"),
+                            onChanged: (value) =>
+                                controller.image.value = value,
+                          ),
+                          TextField(
+                            controller: TextEditingController(
+                                text: controller.title.value),
+                            decoration: InputDecoration(labelText: "Title"),
+                            onChanged: (value) =>
+                                controller.title.value = value,
+                          ),
+                          TextField(
+                            controller: TextEditingController(
+                                text: controller.deskripsiProduk.value),
+                            decoration:
+                                InputDecoration(labelText: "Deskripsi Produk"),
+                            onChanged: (value) =>
+                                controller.deskripsiProduk.value = value,
+                          ),
+                          TextField(
+                            controller: TextEditingController(
+                                text: controller.hargaProduk.value),
+                            decoration:
+                                InputDecoration(labelText: "Harga Produk"),
+                            onChanged: (value) =>
+                                controller.hargaProduk.value = value,
+                          ),
+                          TextField(
+                            controller: TextEditingController(
+                                text: controller.keteranganProduk.value),
+                            decoration:
+                                InputDecoration(labelText: "Keterangan Produk"),
+                            onChanged: (value) =>
+                                controller.keteranganProduk.value = value,
+                          ),
+                        ],
+                      ),
+                      textConfirm: "Save",
+                      textCancel: "Cancel",
+                      confirmTextColor: Colors.white,
+                      onConfirm: () {
+                        controller.updateData(result.id.toString());
+                        controller.title.value = result.title;
+                        controller.image.value = result.image;
+                        controller.deskripsiProduk.value =
+                            result.deskripsiProduk;
+                        controller.hargaProduk.value = result.hargaProduk;
+                        controller.keteranganProduk.value =
+                            result.keteranganProduk;
+                        Get.back(result: true);
+                      },
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.grey,
+                    padding: const EdgeInsets.symmetric(vertical: 10.0),
+                    textStyle: const TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  child: const Text(
+                    "Edit",
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    Get.defaultDialog(
+                      title: "Konfirmasi",
+                      middleText: "Apakah Anda yakin ingin menghapus data ini?",
+                      onConfirm: () {
+                        controller.DeleteData(result.id.toString());
+                        Get.back();
+                      },
+                      onCancel: () => Get.back(),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.grey,
+                    padding: const EdgeInsets.symmetric(vertical: 10.0),
+                    textStyle: const TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  child: const Text(
+                    "Delete",
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),

@@ -34,16 +34,22 @@ class Welcome {
 }
 
 class Result {
-  int id;
+  String id;
   String title;
   String image;
   ImageType imageType;
+  String hargaProduk; // New field for product price
+  String deskripsiProduk; // New field for product description
+  String keteranganProduk; // New field for product notes
 
   Result({
     required this.id,
     required this.title,
     required this.image,
     required this.imageType,
+    required this.hargaProduk,
+    required this.deskripsiProduk,
+    required this.keteranganProduk,
   });
 
   factory Result.fromJson(Map<String, dynamic> json) => Result(
@@ -51,6 +57,9 @@ class Result {
         title: json["title"],
         image: json["image"],
         imageType: imageTypeValues.map[json["imageType"]]!,
+        hargaProduk: json["harga_produk"], // Parsing the price
+        deskripsiProduk: json["Deskripsi_Produk"], // Parsing the description
+        keteranganProduk: json["Keterangan_Produk"], // Parsing the notes
       );
 
   Map<String, dynamic> toJson() => {
@@ -58,6 +67,9 @@ class Result {
         "title": title,
         "image": image,
         "imageType": imageTypeValues.reverse[imageType],
+        "harga_produk": hargaProduk, // Serializing the price
+        "Deskripsi_Produk": deskripsiProduk, // Serializing the description
+        "Keterangan_Produk": keteranganProduk, // Serializing the notes
       };
 }
 

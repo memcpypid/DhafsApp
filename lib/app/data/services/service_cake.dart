@@ -1,28 +1,75 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import '../models/models_cake.dart';
 
-class HttpController extends GetxController {
+class DbController extends GetxController {
   RxList<Result> result = RxList<Result>([]);
   RxBool isLoading = false.obs;
+  FirebaseFirestore db = FirebaseFirestore.instance;
 
-  Future<void> fetchCake() async {
+  Future<void> getCakes() async {
     try {
       isLoading.value = true;
-      final response = await http.get(Uri.parse(
-          'https://api.spoonacular.com/recipes/complexSearch?query=cake&number=15&offset=0&apiKey=fed2835278a6400e92b88b3c20c2def3'));
+      List<Map<String, dynamic>> jsonData = [];
+      await db.collection("cakees").get().then((event) {
+        for (var doc in event.docs) {
+          Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+          data['id'] = doc.id;
+          jsonData.add(data);
+        }
+      });
 
-      if (response.statusCode == 200) {
-        final jsonData = response.body;
-        final cakeResult = Welcome.fromJson(json.decode(jsonData));
-        result.value = cakeResult.results;
-        // print(cakeResult);
-      } else {
-        print('Return with status: ${response.statusCode}');
-      }
+      final cakeResultJson = {
+        "results": jsonData,
+        "offset": 0,
+        "number": jsonData.length,
+        "totalResults": jsonData.length
+      };
+
+      final cakeResult = Welcome.fromJson(cakeResultJson);
+      result.value = cakeResult.results;
     } catch (e) {
-      print('Erorr: $e');
+      print('Error: $e');
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> addCake(Result cake) async {
+    try {
+      isLoading.value = true;
+      DocumentReference docRef =
+          await db.collection("cakees").add(cake.toJson());
+      print('Added cake with ID: ${docRef.id}');
+      await getCakes();
+    } catch (e) {
+      print('Error adding cake: $e');
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> updateCake(String id, Result updatedCake) async {
+    try {
+      isLoading.value = true;
+      await db.collection("cakees").doc(id).update(updatedCake.toJson());
+      print('Updated cake with ID: $id');
+      await getCakes();
+    } catch (e) {
+      print('Error updating cake: $e');
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> deleteCake(String id) async {
+    try {
+      isLoading.value = true;
+      db.collection("cakees").doc(id).delete();
+      print('Deleted cake with ID: $id');
+      await getCakes();
+    } catch (e) {
+      print('Error deleting cake: $e');
     } finally {
       isLoading.value = false;
     }

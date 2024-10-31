@@ -4,7 +4,7 @@ import '../../../data/services/service_cake.dart';
 import '../../../data/models/models_cake.dart';
 
 class HomeController extends GetxController {
-  final HttpController httpController = HttpController();
+  final DbController dbontroller = DbController();
 
   @override
   void onInit() {
@@ -13,7 +13,20 @@ class HomeController extends GetxController {
   }
 
   void fetchCake() async {
-    await httpController.fetchCake();
+    await dbontroller.getCakes();
+  }
+
+  void CreateData(String url, String Title, String Harga, String Deskripsi,
+      String Keterangan) {
+    Result newCake = Result(
+        title: Title,
+        image: url,
+        id: '',
+        imageType: ImageType.JPG,
+        hargaProduk: Harga,
+        deskripsiProduk: Deskripsi,
+        keteranganProduk: Keterangan);
+    dbontroller.addCake(newCake);
   }
 
   WebViewController webViewController(String uri) {
@@ -22,6 +35,6 @@ class HomeController extends GetxController {
       ..loadRequest(Uri.parse(uri));
   }
 
-  List<Result> get cakes => httpController.result;
-  bool get isLoading => httpController.isLoading.value;
+  List<Result> get cakes => dbontroller.result;
+  bool get isLoading => dbontroller.isLoading.value;
 }
