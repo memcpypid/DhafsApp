@@ -18,14 +18,12 @@ class DbController extends GetxController {
           jsonData.add(data);
         }
       });
-
       final cakeResultJson = {
         "results": jsonData,
         "offset": 0,
         "number": jsonData.length,
         "totalResults": jsonData.length
       };
-
       final cakeResult = Welcome.fromJson(cakeResultJson);
       result.value = cakeResult.results;
     } catch (e) {
@@ -53,7 +51,7 @@ class DbController extends GetxController {
     try {
       isLoading.value = true;
       await db.collection("cakees").doc(id).update(updatedCake.toJson());
-      print('Updated cake with ID: $id');
+      print('Updated cake ID: $id');
       await getCakes();
     } catch (e) {
       print('Error updating cake: $e');
@@ -66,7 +64,7 @@ class DbController extends GetxController {
     try {
       isLoading.value = true;
       db.collection("cakees").doc(id).delete();
-      print('Deleted cake with ID: $id');
+      print('Deleted cake  ID: $id');
       await getCakes();
     } catch (e) {
       print('Error deleting cake: $e');
