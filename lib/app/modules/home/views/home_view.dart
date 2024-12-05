@@ -1,12 +1,13 @@
 import 'package:dhafs_app/app/data/models/models_cake.dart';
 
-import 'package:dhafs_app/app/modules/controllers/auth_controllers.dart';
+// import 'package:dhafs_app/app/modules/controllers/auth_controllers.dart';
+// import 'package:dhafs_app/app/modules/controllers/micHandle_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/home_controller.dart';
+import '../../../data/services/services_gps.dart';
 
 class HomeView extends GetView<HomeController> {
-  final AuthController _authController = AuthController();
   HomeView({super.key});
 
   @override
@@ -37,7 +38,7 @@ class HomeView extends GetView<HomeController> {
           IconButton(
             icon: Icon(Icons.person),
             onPressed: () {
-              _authController.logout();
+              Get.toNamed('/profile');
             },
           ),
         ],
@@ -51,10 +52,19 @@ class HomeView extends GetView<HomeController> {
                 borderRadius: BorderRadius.circular(8.0),
               ),
               child: TextField(
+                controller: Get.find<HomeController>().textController,
                 decoration: InputDecoration(
                   hintText: "Search",
                   border: InputBorder.none,
                   prefixIcon: Icon(Icons.search),
+                  suffixIcon: IconButton(
+                    icon: Icon(controller.isListening.value
+                        ? Icons.mic
+                        : Icons.mic_none),
+                    onPressed: () {
+                      controller.startListening();
+                    },
+                  ),
                 ),
               ),
             ),
@@ -137,12 +147,25 @@ class HomeView extends GetView<HomeController> {
     );
   }
 
-  void _showAddItemDialog(BuildContext context) {
+  Future<void> _showAddItemDialog(BuildContext context) async {
     final TextEditingController titleController = TextEditingController();
     final TextEditingController imageController = TextEditingController();
     final TextEditingController description = TextEditingController();
     final TextEditingController harga = TextEditingController();
     final TextEditingController keterangan = TextEditingController();
+
+    final HomeController homeController = HomeController();
+    final ServicesGps services_gps = ServicesGps();
+    await services_gps.getCurrentLocation();
+    String coordinate = '';
+    String lokasi = '';
+
+    coordinate = services_gps.currentPosition!.latitude.toString() +
+        ',' +
+        services_gps.currentPosition!.longitude.toString();
+        
+    lokasi = await homeController.fetchLocationName(coordinate) as String;
+    print(coordinate);
 
     showDialog(
       context: context,
@@ -172,6 +195,13 @@ class HomeView extends GetView<HomeController> {
                   controller: keterangan,
                   decoration: InputDecoration(labelText: "Keterangan"),
                 ),
+                const SizedBox(height: 15.0),
+                Text(
+                  'Coordinate : ' + coordinate,
+                  textAlign: TextAlign.left,
+                ),
+                const SizedBox(height: 15.0),
+                Text('Lokasi : ' + lokasi)
               ],
             ),
           ),
@@ -185,7 +215,7 @@ class HomeView extends GetView<HomeController> {
                 String _keterangan = keterangan.text;
 
                 controller.CreateData(
-                    imageUrl, title, _harga, Desc, _keterangan);
+                    imageUrl, title, _harga, Desc, _keterangan, coordinate);
 
                 Get.back();
               },

@@ -41,16 +41,17 @@ class Result {
   String hargaProduk; // New field for product price
   String deskripsiProduk; // New field for product description
   String keteranganProduk; // New field for product notes
+  String location;
 
-  Result({
-    required this.id,
-    required this.title,
-    required this.image,
-    required this.imageType,
-    required this.hargaProduk,
-    required this.deskripsiProduk,
-    required this.keteranganProduk,
-  });
+  Result(
+      {required this.id,
+      required this.title,
+      required this.image,
+      required this.imageType,
+      required this.hargaProduk,
+      required this.deskripsiProduk,
+      required this.keteranganProduk,
+      required this.location});
 
   factory Result.fromJson(Map<String, dynamic> json) => Result(
         id: json["id"],
@@ -60,6 +61,7 @@ class Result {
         hargaProduk: json["harga_produk"], // Parsing the price
         deskripsiProduk: json["Deskripsi_Produk"], // Parsing the description
         keteranganProduk: json["Keterangan_Produk"], // Parsing the notes
+        location: json["location"], // Parsing the notes
       );
 
   Map<String, dynamic> toJson() => {
@@ -70,6 +72,7 @@ class Result {
         "harga_produk": hargaProduk, // Serializing the price
         "Deskripsi_Produk": deskripsiProduk, // Serializing the description
         "Keterangan_Produk": keteranganProduk, // Serializing the notes
+        "location": location
       };
 }
 

@@ -113,6 +113,15 @@ class DetailView extends GetView<DetailController> {
                 style: const TextStyle(
                     fontSize: 18.0, fontWeight: FontWeight.bold),
               ),
+              const SizedBox(height: 15.0),
+              const Divider(),
+              Obx(
+                () => Text(
+                  "Lokasi : " + controller.locationName.value,
+                  style: const TextStyle(
+                      fontSize: 18.0, fontWeight: FontWeight.bold),
+                ),
+              ),
               const SizedBox(height: 50.0),
               ElevatedButton(
                 onPressed: () {},

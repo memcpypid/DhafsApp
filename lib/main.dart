@@ -5,6 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app/routes/app_pages.dart';
@@ -12,7 +13,7 @@ import 'app/routes/app_pages.dart';
 final AuthController _authController = Get.put(AuthController());
 
 void main() async {
-  //final AuthController _authController = Get.put(AuthController());
+  await GetStorage.init();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,

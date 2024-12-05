@@ -16,13 +16,6 @@ class LoginController extends GetxController {
     }
 
     await _authController.loginUser(email, password);
-
-    // if (email == "user@mail.com" && password == "user") {
-    //   Get.snackbar('Login Berhasil', "Welcome to Dhaf's Cakees");
-    //   Get.toNamed('/home');
-    // } else {
-    //   Get.snackbar('Login gagal', 'Harap Cek Email dan Password Anda');
-    // }
   }
 
   bool getIsloading() {

@@ -8,12 +8,13 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
 class FirebaseMessagingHandler {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
-  // Inisialisasi kanal notifikasi untuk Android
+
   final _androidChannel = const AndroidNotificationChannel(
-    'channel_notification', 'High Importance Notification',
+    'channel_notification',
+    'High Importance Notification',
     description: 'Used For Notification',
     enableVibration: true,
-    importance: Importance.high, //Importance.defaultImportance,
+    importance: Importance.high,
   );
   final _localNotification = FlutterLocalNotificationsPlugin();
   Future<void> initPushNotification() async {
@@ -27,11 +28,11 @@ class FirebaseMessagingHandler {
       sound: true,
     );
     print('Izin yang diberikan pengguna: ${settings.authorizationStatus}');
-// Mendapatkan token FCM
+
     _firebaseMessaging.getToken().then((token) {
       print('FCM Token: $token');
     });
-// Saat aplikasi dalam keadaan terminated
+
     FirebaseMessaging.instance.getInitialMessage().then((message) {
       if (message != null) {
         print("Pesan saat aplikasi terminated: ${message.notification?.title}");
@@ -39,13 +40,13 @@ class FirebaseMessagingHandler {
         print("Tidak ada pesan saat aplikasi terminated.");
       }
     });
-// Saat aplikasi dalam keadaan background
+
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
     FirebaseMessaging.onMessage.listen((message) {
       final notification = message.notification;
       if (notification == null) return;
-// Tampilkan notifikasi lokal
+
       _localNotification.show(
         notification.hashCode,
         notification.title,
