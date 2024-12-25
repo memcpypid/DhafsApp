@@ -17,6 +17,7 @@ class FirebaseMessagingHandler {
     importance: Importance.high,
   );
   final _localNotification = FlutterLocalNotificationsPlugin();
+
   Future<void> initPushNotification() async {
     NotificationSettings settings = await _firebaseMessaging.requestPermission(
       alert: true,
@@ -47,24 +48,32 @@ class FirebaseMessagingHandler {
       final notification = message.notification;
       if (notification == null) return;
 
+      // Menambahkan suara khusus pada notifikasi
       _localNotification.show(
         notification.hashCode,
         notification.title,
         notification.body,
         NotificationDetails(
-            android: AndroidNotificationDetails(
-                _androidChannel.id, _androidChannel.name,
-                channelDescription: _androidChannel.description,
-                importance: Importance.high,
-                priority: Priority.high,
-                enableVibration: true,
-                fullScreenIntent: true,
-                icon: '@drawable/ic_launcher')),
+          android: AndroidNotificationDetails(
+            _androidChannel.id,
+            _androidChannel.name,
+            channelDescription: _androidChannel.description,
+            importance: Importance.high,
+            priority: Priority.high,
+            enableVibration: true,
+            fullScreenIntent: true,
+            icon: '@drawable/ic_launcher',
+            playSound: true, // Pastikan suara dimainkan
+            sound: RawResourceAndroidNotificationSound(
+                'sound1'), // Nama file suara tanpa ekstensi
+          ),
+        ),
         payload: jsonEncode(message.toMap()),
       );
       print(
-          'Pesan diterima saat aplikasi di foreground:${message.notification?.title}');
+          'Pesan diterima saat aplikasi di foreground: ${message.notification?.title}');
     });
+
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       print('Pesan dibuka dari notifikasi: ${message.notification?.title}');
     });

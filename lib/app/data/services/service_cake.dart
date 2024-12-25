@@ -14,7 +14,7 @@ class DbController extends GetxController {
       await db.collection("cakees").get().then((event) {
         for (var doc in event.docs) {
           print(doc);
-          Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+          Map<String, dynamic> data = doc.data(); // as Map<String, dynamic>;
           data['id'] = doc.id;
           jsonData.add(data);
         }

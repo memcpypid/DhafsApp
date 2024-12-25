@@ -2,6 +2,8 @@ import 'package:dhafs_app/app/modules/image/bindings/image_binding.dart';
 import 'package:dhafs_app/app/modules/image/views/image_view.dart';
 import 'package:dhafs_app/app/modules/music/bindings/music_binding.dart';
 import 'package:dhafs_app/app/modules/music/views/music_view.dart';
+import 'package:dhafs_app/app/modules/noConnection/bindings/noConnection_bindings.dart';
+import 'package:dhafs_app/app/modules/noConnection/views/noConnections_views.dart';
 import 'package:dhafs_app/app/modules/profile/bindings/profile_binding.dart';
 import 'package:dhafs_app/app/modules/profile/views/profile_view.dart';
 import 'package:dhafs_app/app/modules/register/bindings/register_binding.dart';
@@ -53,6 +55,11 @@ class AppPages {
       name: _Paths.MUSIC,
       page: () => MusicPlayerView(),
       binding: MusicBinding(),
+    ),
+    GetPage(
+      name: _Paths.NOCONNECTION,
+      page: () => NoconnectionsViews(),
+      binding: NoconnectionBindings(),
     ),
   ];
 }

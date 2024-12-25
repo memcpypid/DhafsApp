@@ -5,7 +5,21 @@ import 'package:get/get.dart';
 class RegisterController extends GetxController {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final usernameController = TextEditingController();
+  final phoneNumberController = TextEditingController();
+  final birthDateController = TextEditingController();
+
+  var selectedRole = 'Penjual'.obs;
+  final roles = ['Penjual', 'Pembeli'].obs;
   final AuthController _authController = Get.put(AuthController());
+  Map<String, dynamic> getUserDataAsJson() {
+    return {
+      'username': usernameController.text,
+      'phoneNumber': phoneNumberController.text,
+      'birthDate': birthDateController.text,
+      'role': selectedRole.value
+    };
+  }
 
   void Register() async {
     String email = emailController.text.trim();
@@ -14,7 +28,7 @@ class RegisterController extends GetxController {
       Get.snackbar('Information!', 'Please enter email and password!');
       return;
     }
-    await _authController.registerUser(email, password);
+    await _authController.registerUser(email, password, getUserDataAsJson());
   }
 
   bool getIsloading() {

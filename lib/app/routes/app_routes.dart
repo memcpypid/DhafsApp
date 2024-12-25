@@ -10,6 +10,7 @@ abstract class Routes {
   static const PRFILE = _Paths.PROFILE;
   static const IMAGE = _Paths.IMAGE;
   static const MUSIC = _Paths.MUSIC;
+  static const NOCONNECTION = _Paths.NOCONNECTION;
 }
 
 abstract class _Paths {
@@ -21,4 +22,5 @@ abstract class _Paths {
   static const PROFILE = '/profile';
   static const IMAGE = '/image';
   static const MUSIC = '/music';
+  static const NOCONNECTION = '/noconnection';
 }

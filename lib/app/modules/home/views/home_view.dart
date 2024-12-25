@@ -4,6 +4,7 @@ import 'package:dhafs_app/app/data/models/models_cake.dart';
 // import 'package:dhafs_app/app/modules/controllers/micHandle_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../controllers/home_controller.dart';
 import '../../../data/services/services_gps.dart';
 
@@ -53,6 +54,10 @@ class HomeView extends GetView<HomeController> {
               ),
               child: TextField(
                 controller: Get.find<HomeController>().textController,
+                onChanged: (value) {
+                  controller.searchQuery.value = value;
+                  controller.filterCakes();
+                },
                 decoration: InputDecoration(
                   hintText: "Search",
                   border: InputBorder.none,
@@ -126,9 +131,9 @@ class HomeView extends GetView<HomeController> {
                       crossAxisSpacing: 16.0,
                       mainAxisSpacing: 16.0,
                     ),
-                    itemCount: controller.cakes.length,
+                    itemCount: controller.filteredCakes.length,
                     itemBuilder: (context, index) {
-                      return ItemCard(result: controller.cakes[index]);
+                      return ItemCard(result: controller.filteredCakes[index]);
                     },
                   ),
                 ),
@@ -137,13 +142,17 @@ class HomeView extends GetView<HomeController> {
           }),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          _showAddItemDialog(context);
-        },
-        backgroundColor: Colors.grey,
-        child: Icon(Icons.add),
-      ),
+      floatingActionButton: Obx(() {
+        return controller.rolePembeli.value
+            ? SizedBox.shrink()
+            : FloatingActionButton(
+                onPressed: () {
+                  _showAddItemDialog(context);
+                },
+                backgroundColor: Colors.grey,
+                child: const Icon(Icons.add),
+              );
+      }),
     );
   }
 
@@ -163,7 +172,7 @@ class HomeView extends GetView<HomeController> {
     coordinate = services_gps.currentPosition!.latitude.toString() +
         ',' +
         services_gps.currentPosition!.longitude.toString();
-        
+
     lokasi = await homeController.fetchLocationName(coordinate) as String;
     print(coordinate);
 

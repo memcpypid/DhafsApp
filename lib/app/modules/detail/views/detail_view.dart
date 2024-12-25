@@ -158,113 +158,130 @@ class DetailView extends GetView<DetailController> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      controller.title.value = result.title;
-                      controller.image.value = result.image;
-                      controller.deskripsiProduk.value = result.deskripsiProduk;
-                      controller.hargaProduk.value = result.hargaProduk;
-                      controller.keteranganProduk.value =
-                          result.keteranganProduk;
+                  // Tombol Edit
+                  Obx(() {
+                    return controller.rolePembeli.value
+                        ? SizedBox
+                            .shrink() // Tidak menampilkan tombol jika rolePembeli true
+                        : ElevatedButton(
+                            onPressed: () {
+                              controller.title.value = result.title;
+                              controller.image.value = result.image;
+                              controller.deskripsiProduk.value =
+                                  result.deskripsiProduk;
+                              controller.hargaProduk.value = result.hargaProduk;
+                              controller.keteranganProduk.value =
+                                  result.keteranganProduk;
 
-                      Get.defaultDialog(
-                        title: "Edit Data",
-                        content: Column(
-                          children: [
-                            TextField(
-                              controller: TextEditingController(
-                                  text: controller.image.value),
-                              decoration:
-                                  const InputDecoration(labelText: "URL"),
-                              onChanged: (value) =>
-                                  controller.image.value = value,
+                              Get.defaultDialog(
+                                title: "Edit Data",
+                                content: Column(
+                                  children: [
+                                    TextField(
+                                      controller: TextEditingController(
+                                          text: controller.image.value),
+                                      decoration: const InputDecoration(
+                                          labelText: "URL"),
+                                      onChanged: (value) =>
+                                          controller.image.value = value,
+                                    ),
+                                    TextField(
+                                      controller: TextEditingController(
+                                          text: controller.title.value),
+                                      decoration: const InputDecoration(
+                                          labelText: "Title"),
+                                      onChanged: (value) =>
+                                          controller.title.value = value,
+                                    ),
+                                    TextField(
+                                      controller: TextEditingController(
+                                          text:
+                                              controller.deskripsiProduk.value),
+                                      decoration: const InputDecoration(
+                                          labelText: "Deskripsi Produk"),
+                                      onChanged: (value) => controller
+                                          .deskripsiProduk.value = value,
+                                    ),
+                                    TextField(
+                                      controller: TextEditingController(
+                                          text: controller.hargaProduk.value),
+                                      decoration: const InputDecoration(
+                                          labelText: "Harga Produk"),
+                                      onChanged: (value) =>
+                                          controller.hargaProduk.value = value,
+                                    ),
+                                    TextField(
+                                      controller: TextEditingController(
+                                          text: controller
+                                              .keteranganProduk.value),
+                                      decoration: const InputDecoration(
+                                          labelText: "Keterangan Produk"),
+                                      onChanged: (value) => controller
+                                          .keteranganProduk.value = value,
+                                    ),
+                                  ],
+                                ),
+                                textConfirm: "Save",
+                                textCancel: "Cancel",
+                                confirmTextColor: Colors.white,
+                                onConfirm: () {
+                                  controller.updateData(result.id.toString());
+                                  Get.back(result: true);
+                                },
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.grey,
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 10.0),
+                              textStyle: const TextStyle(
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                            TextField(
-                              controller: TextEditingController(
-                                  text: controller.title.value),
-                              decoration:
-                                  const InputDecoration(labelText: "Title"),
-                              onChanged: (value) =>
-                                  controller.title.value = value,
+                            child: const Text(
+                              "Edit",
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
                             ),
-                            TextField(
-                              controller: TextEditingController(
-                                  text: controller.deskripsiProduk.value),
-                              decoration: const InputDecoration(
-                                  labelText: "Deskripsi Produk"),
-                              onChanged: (value) =>
-                                  controller.deskripsiProduk.value = value,
+                          );
+                  }),
+                  // Tombol Delete
+                  Obx(() {
+                    return controller.rolePembeli.value
+                        ? SizedBox
+                            .shrink() // Tidak menampilkan tombol jika rolePembeli true
+                        : ElevatedButton(
+                            onPressed: () {
+                              Get.defaultDialog(
+                                title: "Konfirmasi",
+                                middleText:
+                                    "Apakah Anda yakin ingin menghapus data ini?",
+                                onConfirm: () {
+                                  controller.DeleteData(result.id.toString());
+                                  Get.back();
+                                },
+                                onCancel: () => Get.back(),
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.grey,
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 10.0),
+                              textStyle: const TextStyle(
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                            TextField(
-                              controller: TextEditingController(
-                                  text: controller.hargaProduk.value),
-                              decoration: const InputDecoration(
-                                  labelText: "Harga Produk"),
-                              onChanged: (value) =>
-                                  controller.hargaProduk.value = value,
+                            child: const Text(
+                              "Delete",
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
                             ),
-                            TextField(
-                              controller: TextEditingController(
-                                  text: controller.keteranganProduk.value),
-                              decoration: const InputDecoration(
-                                  labelText: "Keterangan Produk"),
-                              onChanged: (value) =>
-                                  controller.keteranganProduk.value = value,
-                            ),
-                          ],
-                        ),
-                        textConfirm: "Save",
-                        textCancel: "Cancel",
-                        confirmTextColor: Colors.white,
-                        onConfirm: () {
-                          controller.updateData(result.id.toString());
-                          Get.back(result: true);
-                        },
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.grey,
-                      padding: const EdgeInsets.symmetric(vertical: 10.0),
-                      textStyle: const TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    child: const Text(
-                      "Edit",
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      Get.defaultDialog(
-                        title: "Konfirmasi",
-                        middleText:
-                            "Apakah Anda yakin ingin menghapus data ini?",
-                        onConfirm: () {
-                          controller.DeleteData(result.id.toString());
-                          Get.back();
-                        },
-                        onCancel: () => Get.back(),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.grey,
-                      padding: const EdgeInsets.symmetric(vertical: 10.0),
-                      textStyle: const TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    child: const Text(
-                      "Delete",
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
+                          );
+                  }),
                 ],
               ),
             ],

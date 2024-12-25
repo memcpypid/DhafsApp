@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dhafs_app/app/data/models/models_users.dart';
 import 'package:dhafs_app/app/modules/login/views/login_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +22,8 @@ class AuthController extends GetxController {
     isLoggedIn.value = _prefs.containsKey('user_token');
   }
 
-  Future<void> registerUser(String email, String password) async {
+  Future<void> registerUser(String email, String password,
+      Map<String, dynamic> additionalData) async {
     try {
       isLoading.value = true;
       await _auth.createUserWithEmailAndPassword(
@@ -28,6 +31,13 @@ class AuthController extends GetxController {
         password: password,
       );
       _prefs.setString('user_token', _auth.currentUser!.uid);
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(_auth.currentUser!.uid)
+          .set({
+        'email': email,
+        ...additionalData,
+      });
       Get.snackbar('Success', 'Registration successful',
           backgroundColor: Colors.green);
       Get.off(LoginView());
@@ -43,14 +53,42 @@ class AuthController extends GetxController {
   Future<void> loginUser(String email, String password) async {
     try {
       isLoading.value = true;
+
+      // Sign in with email and password
       await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
-      _prefs.setString('user_token', _auth.currentUser!.uid);
-      Get.snackbar('Success', 'Login berhasil', backgroundColor: Colors.green);
-      isLoggedIn.value = true;
-      Get.offAllNamed('/home');
+
+      // Get user ID
+      String userId = _auth.currentUser!.uid;
+
+      // Fetch user data from Firestore
+      var userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .get();
+
+      if (userDoc.exists) {
+        // Convert Firestore document to UserModel
+        UserModel user = UserModel.fromJson(userDoc.data()!);
+
+        // Optionally, save user data to local storage or state management
+        _prefs.setString('user_token', userId);
+        _prefs.setString('user_name', user.username);
+        _prefs.setString('user_email', user.email);
+        _prefs.setString('user_role', user.role);
+        _prefs.setString('user_phone', user.phoneNumber);
+        _prefs.setString('user_birthDate', user.birthDate);
+
+        Get.snackbar('Success', 'Login berhasil',
+            backgroundColor: Colors.green);
+        isLoggedIn.value = true;
+        Get.offAllNamed('/home');
+      } else {
+        Get.snackbar('Error', 'User data not found',
+            backgroundColor: Colors.red);
+      }
     } catch (error) {
       Get.snackbar('Error', 'Login gagal: $error', backgroundColor: Colors.red);
     } finally {
@@ -59,7 +97,7 @@ class AuthController extends GetxController {
   }
 
   void logout() async {
-    _prefs.remove('user_token');
+    await _prefs.clear();
     isLoggedIn.value = false;
     _auth.signOut();
     Get.offAllNamed('/login');

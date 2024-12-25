@@ -6,9 +6,12 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
+import 'package:shared_preferences/shared_preferences.dart';
+
 class DetailController extends GetxController {
   final _pickedImage = Rxn<File>();
   final DbController _dbController = DbController();
+  final SharedPreferences _prefs = Get.find<SharedPreferences>();
   File? get pickedImage => _pickedImage.value;
   var image = ''.obs;
   var title = ''.obs;
@@ -17,6 +20,7 @@ class DetailController extends GetxController {
   var keteranganProduk = ''.obs;
   var locationName = ''.obs;
   final Result result = Get.arguments as Result;
+  var rolePembeli = false.obs;
   @override
   void onInit() {
     super.onInit();
@@ -47,6 +51,7 @@ class DetailController extends GetxController {
   }
 
   void fetchCake() async {
+    rolePembeli.value = await _prefs.getString('user_role')! == 'Pembeli';
     await _dbController.getCakes();
     print('lokasi : ');
     print(result.location);

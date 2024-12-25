@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dhafs_app/app/modules/controllers/auth_controllers.dart';
 import 'package:dhafs_app/app/modules/profile/controllers/profile_controller.dart';
+import 'package:dhafs_app/app/modules/profile/views/edit_profile_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -50,14 +51,27 @@ class ProfileView extends StatelessWidget {
                   }),
                 ),
                 const SizedBox(width: 16),
-                Obx(() => Text(
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
                       controller.userName.value,
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
-                    )),
+                    ),
+                    Text(
+                      controller.userRole.value,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
@@ -73,7 +87,7 @@ class ProfileView extends StatelessWidget {
                     title: "My Account",
                     subtitle: "Make changes to your account",
                     onTap: () {
-                      // Navigate to My Account Page
+                      Get.to(EditProfileView());
                     },
                   ),
                   _buildOption(
