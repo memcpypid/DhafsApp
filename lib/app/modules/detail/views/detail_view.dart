@@ -123,34 +123,40 @@ class DetailView extends GetView<DetailController> {
                 ),
               ),
               const SizedBox(height: 50.0),
-              ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF383838),
-                  padding: const EdgeInsets.symmetric(vertical: 16.0),
-                  textStyle: const TextStyle(
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.bold,
+              Visibility(
+                visible: controller.rolePembeli.value ==
+                    true, // Button is visible only when rolePembeli is false
+                child: ElevatedButton(
+                  onPressed: () {
+                    // Add your onPressed functionality here
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF383838),
+                    padding: const EdgeInsets.symmetric(vertical: 16.0),
+                    textStyle: const TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                child: const SizedBox(
-                  width: 150,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Buy Now",
-                        style: TextStyle(
+                  child: SizedBox(
+                    width: 150,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Buy Now",
+                          style: const TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                        const SizedBox(width: 8.0),
+                        const Icon(
+                          Icons.shopping_cart,
+                          size: 20,
                           color: Colors.white,
                         ),
-                      ),
-                      SizedBox(width: 8.0),
-                      Icon(
-                        Icons.shopping_cart,
-                        size: 20,
-                        color: Colors.white,
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),

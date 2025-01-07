@@ -49,7 +49,7 @@ class NoconnectionsViews extends StatelessWidget {
               const SizedBox(height: 30),
               ElevatedButton(
                 onPressed: () {
-                  // Tambahkan logika untuk menambahkan data offline di sini
+                 
                   showDialog(
                     context: context,
                     builder: (context) => AlertDialog(
@@ -65,7 +65,6 @@ class NoconnectionsViews extends StatelessWidget {
                         ElevatedButton(
                           onPressed: () {
                             _showAddItemDialogOffline(context);
-                            // Logika untuk menambahkan data offline
                           },
                           child: const Text('Yes'),
                         ),

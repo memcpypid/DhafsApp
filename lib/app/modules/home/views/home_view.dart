@@ -26,11 +26,10 @@ class HomeView extends GetView<HomeController> {
               borderRadius: BorderRadius.circular(8.0),
             ),
             child: Center(
-              child: Text(
-                "LOGO",
-                style: TextStyle(
-                  color: Colors.black,
-                ),
+              child: Image.asset(
+                'images/logo.jpg', // Path to your logo image
+                width: 200.0, // Adjust the width as needed
+                height: 200.0, // Adjust the height as needed
               ),
             ),
           ),

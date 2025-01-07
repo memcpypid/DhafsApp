@@ -31,7 +31,7 @@ class ProfileView extends StatelessWidget {
             child: Row(
               children: [
                 GestureDetector(
-                  onTap: () => _changeProfilePicture(context),
+                  // onTap: () => _//changeProfilePicture(context),
                   child: Obx(() {
                     // Menampilkan gambar avatar yang diperbarui
                     if (controller.profileImagePath.isNotEmpty) {
@@ -88,27 +88,6 @@ class ProfileView extends StatelessWidget {
                     subtitle: "Make changes to your account",
                     onTap: () {
                       Get.to(EditProfileView());
-                    },
-                  ),
-                  _buildOption(
-                    icon: Icons.lock_outline,
-                    title: "Privasi",
-                    onTap: () {
-                      // Navigate to Privacy Page
-                    },
-                  ),
-                  _buildOption(
-                    icon: Icons.notifications_outlined,
-                    title: "Notification",
-                    onTap: () {
-                      // Navigate to Notification Page
-                    },
-                  ),
-                  _buildOption(
-                    icon: Icons.more,
-                    title: "More",
-                    onTap: () {
-                      _showMoreOptions(context);
                     },
                   ),
                   _buildOption(

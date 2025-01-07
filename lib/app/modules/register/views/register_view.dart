@@ -27,13 +27,11 @@ class RegisterView extends StatelessWidget {
                     color: Colors.grey[300],
                     borderRadius: BorderRadius.circular(15.0),
                   ),
-                  child: const Center(
-                    child: Text(
-                      'LOGO',
-                      style: TextStyle(
-                        fontSize: 24.0,
-                        fontWeight: FontWeight.bold,
-                      ),
+                  child: Center(
+                    child: Image.asset(
+                      'images/logo.jpg', // Path to your logo image
+                      width: 200.0, // Adjust the width as needed
+                      height: 200.0, // Adjust the height as needed
                     ),
                   ),
                 ),

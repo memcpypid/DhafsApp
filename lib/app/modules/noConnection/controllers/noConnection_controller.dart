@@ -1,7 +1,5 @@
 import 'dart:convert';
 import 'dart:math';
-
-// import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dhafs_app/app/data/models/models_cake.dart';
 import 'package:dhafs_app/app/data/services/service_cake.dart';
@@ -23,18 +21,16 @@ class NoconnectionController extends GetxController {
     });
   }
 
-// Fungsi untuk mengupdate status koneksi
+
   void _updateConnectionStatus(ConnectivityResult connectivityResult) {
     print(Get.currentRoute);
-// kondisi dimana aplikasi mendeteksi bawha tidak ada koneksi sama sekali
     if (connectivityResult == ConnectivityResult.none) {
       Get.offAll(() => const NoconnectionsViews());
       isConnect = false;
     } else {
-      // print(Get.currentRoute);
+      print(Get.currentRoute);
       isConnect = true;
       pushOfflineDataToFirestore();
-// else merupakan kondisi jika aplikasi terhubung dengan koneksi wifi atau mobile data
       if (Get.currentRoute == '/NoconnectionsViews' ||
           Get.currentRoute == '/noconnection') {
         Get.offAll(() => HomeView());
@@ -74,12 +70,11 @@ class NoconnectionController extends GetxController {
     final connectivityResult = await Connectivity().checkConnectivity();
 
     if (connectivityResult != ConnectivityResult.none) {
-      // final firestore = FirebaseFirestore.instance;
       for (var item in offlineData) {
         final data = jsonDecode(item);
         final random = Random();
         final id =
-            random.nextInt(1000000).toString(); // ID acak antara 0-999999
+            random.nextInt(1000000).toString();
         Result newCake = Result(
           title: data['title'],
           image: data['image'],
@@ -93,7 +88,7 @@ class NoconnectionController extends GetxController {
         dbontroller.addCake(newCake);
       }
 
-      // Hapus data dari SharedPreferences setelah berhasil dipush
+
       await prefs.remove('offlineData');
       if (!offlineData.isEmpty) {
         Get.snackbar('Informasi', 'Data Berhasil Di Tambahkan!',
